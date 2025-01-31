@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template
+from database.projects import PROJECTS
+from database.models.project import Project
+
 
 projects_route = Blueprint('projects', __name__)
 
@@ -14,8 +17,9 @@ Projects routes
 """
 
 @projects_route.route('/')
-def getProjects():
-    return {'pagina': "lista projectos"}    
+def getProjects():    
+    projects = Project.select()
+    return render_template('timesheet.html', projects = projects)
 
 @projects_route.route('/', methods=['POST'])
 def postProject():
