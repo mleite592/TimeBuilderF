@@ -1,0 +1,65 @@
+:root {
+    --fugro-dark-blue: #111a22; /* Dark Blue */
+    --fugro-light-blue: #1d262e; /* Light Blue */
+    --fugro-gray: #cccccc; /* Gray */
+    --fugro-white: #ffffff; /* White */
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--fugro-dark-blue);
+    color: var(--fugro-white);
+}
+
+.sidebar {
+    width: 220px;
+    background-color: var(--fugro-light-blue);
+    padding: 10px;
+    transition: width 0.3s;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    color: var(--fugro-white);
+}
+
+.sidebar .material-icons {
+    margin-right: 10px;
+}
+
+.sidebar.collapsed .nav-link .text {
+    display: none;
+}
+
+.sidebar .sub-item {
+    padding-left: 15px;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 15px;
+}
+
+.topbar {
+    background-color: var(--fugro-dark-blue);
+    color: var(--fugro-white);
+    padding: 10px;
+}
+
+.sidebar img {
+    width: 100%;
+    margin-bottom: 15px;
+    cursor: pointer; /* Add cursor pointer to indicate clickability */
+}
+
+.transparent-bg {
+    background-color: transparent;
+    border: none;
+}
