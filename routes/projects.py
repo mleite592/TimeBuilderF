@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request
-from database.projects import PROJECTS
 from database.models.project import Project
 
 
@@ -18,8 +17,10 @@ Projects routes
 
 @projects_route.route('/')
 def getProjects():    
+    #Project.create(projectCode = "04.0000001", projectName = "Project Test")
     projects = Project.select()
-    return render_template('timesheet.html')
+    print(projects)
+    return render_template('project.html', projects=projects)
 
 @projects_route.route('/', methods=['POST'])
 def postProject():

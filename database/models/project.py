@@ -1,9 +1,7 @@
 from peewee import Model, CharField
-from database.database import db
+from database.database import BaseModel
 
-class Project(Model):
+
+class Project(BaseModel):
     projectCode = CharField()
     projectName = CharField()
-
-    class Meta:
-        database: db

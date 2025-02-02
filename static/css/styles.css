@@ -64,6 +64,64 @@ body {
     border: none;
 }
 
+.table-bordered-rows thead th {
+    background-color: var(--fugro-dark-blue); 
+    color: var(--fugro-white); 
+    background-color: var(--fugro-light-blue);
+}
+
+.table-bordered-rows tbody tr {
+    border-bottom: 1px solid var(--fugro-gray);
+    color: var(--fugro-gray); 
+    margin-bottom: 1px;
+}
+
+.submit-btn {
+    background-color: var(--fugro-dark-blue); /* Bootstrap primary color */
+    color: var(--fugro-white);
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-btn .material-icons {
+    font-size: 20px;
+}
+.action-btn {
+    background-color: var(--fugro-dark-blue); /* Bootstrap primary color */
+    color: var(--fugro-white);
+    border: none;
+    padding: 5px 5px;
+    font-size: 16px;
+    border-radius: 4px;
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+
+    /*margin-right: 5px; /* Add some space between buttons */
+    /*padding: 5px 10px; /* Adjust padding as needed */
+    /*font-size: 14px; /* Adjust font size as needed */
+    /*border-radius: 4px; /* Add border radius for rounded corners */
+}
+
+.action-btn .material-icons {
+    font-size: 20px;
+}
+
+.field-form {
+    background-color: var(--fugro-light-blue);
+    color: var(--fugro-white); /* Optional: Change text color for better readability */
+    border: 1px solid var(--fugro-gray); /* Optional: Add a border */
+    padding: 5px; /* Optional: Add padding */
+    border-radius: 4px; /* Optional: Add border radius */
+}
+
+
+
 .footer {
     background-color: var(--fugro-dark-blue);
     color: var(--fugro-gray);

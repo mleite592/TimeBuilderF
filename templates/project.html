@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+{% block title %}Project{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Projects</h2>
+    <form id="projectForm">
+        <div class="form-row align-items-end">
+            <div class="form-group col-md-5">
+                <label for="projectCode">Project Code</label>
+                <input type="text" class="form-control field-form" id="projectCode" placeholder="Enter project code">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="projectName">Project Name</label>
+                <input type="text" class="form-control field-form" id="projectName" placeholder="Enter project name">
+            </div>
+            <div class="form-group col-md-2">
+                <button type="submit" class="submit-btn">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    <!-- Grid to display projects -->
+    <table class="table table-bordered-rows mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Project Code</th>
+                <th scope="col">Project Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="projectTableBody">
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.projectCode }}</td>
+                    <td>{{ project.projectName }}</td>
+                    <td>
+                        <button class="action-btn" onclick="editProject(this)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                        <button class="action-btn" onclick="deleteProject(this)">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}     
+
+
+
+    
+    
