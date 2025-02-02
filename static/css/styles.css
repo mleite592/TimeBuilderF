@@ -63,3 +63,8 @@ body {
     background-color: transparent;
     border: none;
 }
+
+.footer {
+    background-color: var(--fugro-dark-blue);
+    color: var(--fugro-gray);
+}

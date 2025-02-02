@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% block head %}
+    <title>{% block title %}{% endblock %}</title>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Builder</title>
@@ -10,6 +12,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+
+    {% endblock %}
 </head>
 <body>
     <div class="d-flex">
@@ -19,7 +23,7 @@
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="{{ url_for('home.home') }}">
                         <span class="material-icons">home</span>
                         <span class="text">Home</span>
                     </a>
@@ -57,10 +61,10 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('timesheets/') }}">
-                        <span class="material-icons">schedule</span>
-                        <span class="text">Timesheet</span>
-                    </a>
+                  <a class="nav-link"  href="{{ url_for('timesheets.getTimesheets') }}">
+                    <span class="material-icons">schedule</span>
+                    <span class="text">Timesheet</span>
+                  </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -77,27 +81,19 @@
             </ul>
         </div>
         <div class="content">
+           {% block content %}
             <div class="topbar">
                 <h5>Time Builder</h5>
                 <p>A simple timesheet app</p>
             </div>
-            <div class="container mt-3">
-                <!-- Forms will be rendered here -->
-                <h2>To be designed</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
+            {% endblock %}
         </div>
+
+        <div class="footer">
+          {% block footer %}            
+          {% endblock %}
+          </div>
+       </div>
     </div>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -107,6 +103,6 @@
         document.getElementById('logo').addEventListener('click', function() {
             document.getElementById('sidebarMenu').classList.toggle('collapsed');
         });
-    </script>
+    </script>    
 </body>
 </html>
