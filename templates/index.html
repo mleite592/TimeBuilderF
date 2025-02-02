@@ -41,13 +41,13 @@
                             </a>
                         </li>
                         <li class="nav-item sub-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url_for('tasks.getTasks') }}">
                                 <span class="material-icons">assignment</span>
                                 <span class="text">Tasks</span>
                             </a>
                         </li>
                         <li class="nav-item sub-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url_for('subtasks.getSubtasks') }}"> 
                                 <span class="material-icons">subdirectory_arrow_right</span>
                                 <span class="text">Sub-tasks</span>
                             </a>

@@ -17,7 +17,7 @@ Projects routes
 
 @projects_route.route('/')
 def getProjects():    
-    #Project.create(projectCode = "04.0000001", projectName = "Project Test")
+    #Project.create(projectCode = "04.0000001", projectName = "Project Test", status = "enabled")
     projects = Project.select()
     print(projects)
     return render_template('project.html', projects=projects)
