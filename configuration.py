@@ -8,11 +8,24 @@ from routes.tasks import tasks_route
 from routes.subtasks import subtasks_route
 from database.database import db
 from database.models.project import Project
+from flask_wtf import CSRFProtect
+from flask_bootstrap import Bootstrap5
+import secrets
 import pandas as pd
 
 def configure_all(app):
+    configure_app(app)
     configure_routes(app)
     configure_db()
+
+def configure_app(app):
+    #app.config['SECRET_KEY'] = 'you-will-never-guess'    
+    foo = secrets.token_urlsafe(16)
+    app.secret_key = foo
+    app.config['SECRET_KEY'] = foo
+    bootstrap = Bootstrap5(app)
+    csrf = CSRFProtect(app)
+
 
 def configure_routes(app):
     app.register_blueprint(home_route)

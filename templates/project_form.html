@@ -4,25 +4,31 @@
 {% block content %}
 <div class="container mt-3">
     <h2>Projects</h2>
-    <form id="projectForm">
+    <form id="projectForm" action="{{ url_for('projects.project', id=form.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group col-md-3">
+            <label for="Id">Id</label>                                
+            {{ form.id }}
+        </div>
+        
         <div class="form-row align-items-end">
             <div class="form-group col-md-3">
-                <label for="projectCode">Project Code</label>
-                <input type="text" class="form-control field-form" id="projectCode" placeholder="Enter project code">
+                <label for="projectCode">Project Code</label>                                
+                {{ form.projectCode }}
             </div>
             <div class="form-group col-md-3">
-                <label for="projectName">Project Name</label>
-                <input type="text" class="form-control field-form" id="projectName" placeholder="Enter project name">
+                <label for="projectName">Project Name</label>                                
+                {{ form.projectName }}
             </div>
-            <div class="form-group col-md-3">
-                <label for="projectName">Status</label>
-                <input type="text" class="form-control field-form" id="status" placeholder="Enter project name">
+            <div class="form-group col-md-2">
+                <label for="projectName">Status</label>                                
+                {{ form.projectStatus }}
             </div>
             <div class="form-group col-md-2">
                 <button type="submit" class="submit-btn">
                     <span class="material-icons">add</span>
                 </button>
-            </div>
+            </div>            
         </div>
     </form>
     
@@ -30,6 +36,7 @@
     <table class="table table-bordered-rows mt-3">
         <thead>
             <tr>
+                <th scope="col">Id</th>
                 <th scope="col">Project Code</th>
                 <th scope="col">Project Name</th>
                 <th scope="col">Status</th>
@@ -39,15 +46,20 @@
         <tbody id="projectTableBody">
             {% for project in projects %}
                 <tr>
+                    <td>{{ project.id }}</td>                    
                     <td>{{ project.projectCode }}</td>
                     <td>{{ project.projectName }}</td>
                     <td>{{ project.status }}</td>
                     <td>
-                        <button class="action-btn" onclick="editProject(this)">
-                            <span class="material-icons">edit</span>
+                        <button class="action-btn">
+                            <a href="{{ url_for('projects.edit_project', id=project.id) }}">
+                                <span class="material-icons">edit</span>
+                            </a>                            
                         </button>
-                        <button class="action-btn" onclick="deleteProject(this)">
-                            <span class="material-icons">delete</span>
+                        <button class="action-btn">
+                            <a href="{{ url_for('projects.delete_project', id=project.id) }}">
+                                <span class="material-icons">delete</span>
+                            </a>
                         </button>
                     </td>
                 </tr>

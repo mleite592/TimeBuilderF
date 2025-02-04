@@ -1,57 +1,56 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, redirect, render_template, request, url_for
 from database.models.project import Project
+from forms.project import ProjectForm
 
 
 projects_route = Blueprint('projects', __name__)
 
-"""
-Projects routes
-  - /projects/ (GET) - Project list
-  - /projects/ (POST) - New project
-  - /projects/new (GET) - Render empty project form
-  - /projects/<id> (GET) - get project data
-  - /projects/<id>/edit (GET) - Render project form with project data
-  - /projects/<id>/ (PUT) - update project data
-  - /projects/<id> (DELETE) - Delete project
-"""
-
 @projects_route.route('/')
-def getProjects():    
-    #Project.create(projectCode = "04.0000001", projectName = "Project Test", status = "enabled")
+def index():
     projects = Project.select()
-    print(projects)
-    return render_template('project.html', projects=projects)
+    form = ProjectForm()    
+    return render_template('project_form.html', projects=projects, form = form)
 
-@projects_route.route('/', methods=['POST'])
-def postProject():
+@projects_route.route('/project', methods=['GET', 'POST'])
+@projects_route.route('/project/<int:id>', methods=['GET', 'POST'])
+def project(id=None):
+    if id:
+        project = Project.get_by_id(id)
+        form = ProjectForm(obj=project)
+        if form.validate_on_submit():
+            project.update(                
+                projectCode = form.projectCode.data,
+                projectName = form.projectName.data,               
+                projectStatus = form.projectStatus.data
+            )
+            print("Saved", project.projectCode, project.projectName)            
+            return redirect(url_for('projects.index'))
+    else:
+        form = ProjectForm()
+        if form.validate_on_submit():
+            new_project = Project(projectCode=form.projectCode.data, projectName=form.projectName.data)
+            #db.session.add(new_project)
+            #db.session.commit()
+            print("Saved3")
+            return redirect(url_for('projects.index'))        
+    # refresh records
+    projects = Project.select()    
+    return render_template('project_form.html', form=form, id=id, projects= projects)
 
-    data = request.json
+@projects_route.route('/edit/<int:id>')
+def edit_project(id):
+    project = Project.get_by_id(id)
+    form = ProjectForm(obj=project)     
+    print("edit", id)
+    return render_template('project_form.html', form=form, id=id)
 
-    p = Project.create(
-        projectCode = data[''],
-        projectName = data['']
-    )
-    
 
-@projects_route.route('/new')
-def newProject():
-    pass
-
-@projects_route.route('/<int:project_code>')
-def getProject(project_code):
-    print(project_code)
-    pass
-
-@projects_route.route('/<int:project_code>/edit')
-def editProject(project_code):
-    print(project_code)
-    pass
-
-@projects_route.route('/<int:project_code>/update', methods=['PUT'])
-def putProject():
-    pass
-
-@projects_route.route('/')
-def delProject():
-    pass
+@projects_route.route('/delete/<int:id>')
+def delete_project(id):
+    form = ProjectForm()    
+    projects = Project.select()    
+    #delete
+    #projects = Project.delete_by_id(id)
+    print("delete", id)
+    return render_template('project_form.html', form=form, id=id, projects= projects)
 
