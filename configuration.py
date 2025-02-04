@@ -1,6 +1,7 @@
 
 from database.models.subtask import Subtask
 from database.models.task import Task
+from database.models.timesheet import Timesheet
 from routes.home import home_route
 from routes.projects import projects_route
 from routes.timesheets import timesheets_route
@@ -42,6 +43,7 @@ def configure_db():
     db.create_tables([Project])
     db.create_tables([Task])
     db.create_tables([Subtask])
+    db.create_tables([Timesheet])
 
 def preLoadTask():
     #projects = pd.read_excel("database/dataset.xlsx", sheet_name="Projects")
