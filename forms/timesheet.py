@@ -1,10 +1,12 @@
+from typing import Optional
 from flask_wtf import FlaskForm
 from wtforms import DateField, HiddenField, SelectField, StringField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
+from datetime import datetime
 
 class TimeSheetForm(FlaskForm):
     operator = StringField('operator')    
-    date = DateField('date', format='%m-%d-%Y')
+    timesheet_date = StringField('timesheet_date')
     #projectCode = SelectField('projectCode', default='None')
     #projectName = SelectField('projectName', default='None')    
     unit_name = StringField('unitName')
@@ -16,9 +18,9 @@ class TimeSheetForm(FlaskForm):
     #type_feature = SelectField('type_feature', default='Tradiotional') #Traditional or Roames
     #type_task =  SelectField('type_task', default='Regular')   #Regular, Rework or QC
     comments = StringField('comments')    
-    start_time = StringField('statrt_time')
+    start_time = StringField('start_time')
     end_time = StringField('end_time')
-    #status = StringField('status', default='Open') # Open, Submitted, Approved, Deleted
+    status = StringField('Status', default='Open')
     id = HiddenField('ID')
 
 

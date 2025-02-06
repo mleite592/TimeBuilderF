@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% block title %}Calendar{% endblock %}
+
+{% block content %}
+<h1>Calendar</h1>
+    <button class="action-btn">
+        <a href="{{ url_for('calendars.index', year=next_year, month=next_month) }}">
+            <span class="material-icons">arrow_forward</span>
+        </a>                            
+    </button>    
+    <button class="action-btn">
+        <a href="{{ url_for('calendars.index', month=prev_month) }}">
+            <span class="material-icons">arrow_back</span>
+        </a>                            
+    </button>
+    <div class="calendar-table">{{ cal_html|safe }}</div>
+{% endblock %}

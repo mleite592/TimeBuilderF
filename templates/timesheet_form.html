@@ -1,32 +1,41 @@
 {% extends "index.html" %}
-{% block title %}Project{% endblock %}
+{% block title %}Timesheet{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
     <h2>Timesheet</h2>    
-    <form id="timesheetForm" method="POST" action="{{ url_for('timesheets.save', id=form.id.data) }}">                
+    Date: {{ timesheet_day_selected }}
+    {{ year }}
+    {{ month }}
+    {{ day }}
+
+    <form id="timesheetForm" method="POST" action="{{ url_for('timesheets.save', id=form.id.data, year=year, month=month, day=day) }}">                
         {{ form.hidden_tag() }}                
         <div class="form-row align-items-end">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-5">
                 <label for="date">Date</label>                                
-                {{ form.id }}
-                {{ form.date }}
+                {{ form.id }}                
             </div>
             <div class="form-group col-md-3">
-                <label for="projectName">Project Name</label>                                                
+                <label for="status">Status</label>                                                                
+                {{ form.status }}
             </div>
-            <div class="form-group col-md-2">
-                <label for="projectName">Status</label>                                                
-            </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <button type="submit" class="submit-btn">
                     <span class="material-icons">add</span>
                 </button>
             </div>            
         </div>
+        <div class="form-row align-items-end mt-2">
+            <div class="form-group col-md-5">
+                <button type="" class="btn submit-btn">
+                    {{ form.status }} 
+                </button>
+            </div>
+        </div>
     </form>
     
-    <!-- Grid to display projects -->
+    <!-- Grid to display timesheets -->
     <table class="table table-bordered-rows mt-3">
         <thead>
             <tr>
@@ -37,19 +46,21 @@
                 <th scope="col">Actions</th>
             </tr>
         </thead>
-        <tbody id="projectTableBody">
+        <tbody id="timesheetTableBody">
             {% for timesheet in timesheets %}
                 <tr>
                     <td>{{ timesheet.id }}</td>                    
-                    <td>{{ timesheet.date }}</td>                    
+                    <td>{{ timesheet.timesheet_date }}</td>
+                    <td>project<td>                    
+                    <td>{{ timesheet.status }}</td>
                     <td>
                         <button class="action-btn">
-                            <a href="{{ url_for('projects.edit', id=project.id) }}">
+                            <a href="{{ url_for('timesheets.index', id=timesheet.id, year=year, month=month, day=day) }}">
                                 <span class="material-icons">edit</span>
                             </a>                            
                         </button>
                         <button class="action-btn">
-                            <a href="{{ url_for('projects.delete', id=project.id) }}">
+                            <a href="{{ url_for('timesheets.delete', id=timesheet.id ) }}">
                                 <span class="material-icons">delete</span>
                             </a>
                         </button>
@@ -59,4 +70,12 @@
         </tbody>
     </table>
 </div>
-{% endblock %}     
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+    });
+</script>
+
+{% endblock %}

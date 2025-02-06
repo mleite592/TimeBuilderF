@@ -18,20 +18,20 @@ def save():
     if form.validate_on_submit(): 
         if id:
             project = Project.get_by_id(id)
-            if project:
-                #project.update(
+            if project:            
                 project.projectCode = form.projectCode.data
                 project.projectName = form.projectName.data               
                 project.status = form.projectStatus.data                
                 project.save()
             else:
-                flash('Project not found')
+                flash('Project not found', "error")
         else:
             new_project = Project(projectCode=form.projectCode.data, 
                                   projectName=form.projectName.data,
                                   status = form.projectStatus.data)    
 
             new_project.save()                    
+            flash('Project created', "success")
         return redirect(url_for('projects.index'))
     
 @projects_route.route('/edit/<int:id>')

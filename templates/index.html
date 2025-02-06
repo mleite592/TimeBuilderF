@@ -80,11 +80,41 @@
                 </li>
             </ul>
         </div>
-        <div class="content">
-           {% block content %}
+        <div class="content mt-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == "success" %}
+                    <div class="alert alert-success alert-toster mb-3" role="alert" id="autoDismissAlert">
+                        {{category}}:{{ message }}                        
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                    </div>                    
+                    {% endif %}                                                 
+                    {% if category == "warning" %}
+                    <div class="alert alert-warning alert-toster mb-3" role="alert" id="autoDismissAlert">
+                        {{category}}:{{ message }}                        
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                    </div>
+                    {% if category == "error" %}
+                    <div class="alert alert-error alert-toster mb-3" role="alert">
+                        {{category}}:{{ message }}                        
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                    </div>                    
+                    {% endif %}                                                                     
+                {% endif %}  
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+           {% block content %}           
             <div class="topbar">
                 <h5>Time Builder</h5>
-                <p>A simple timesheet app</p>
+                <p>A simple timesheet app</p>                
             </div>
             {% endblock %}
         </div>
@@ -104,5 +134,17 @@
             document.getElementById('sidebarMenu').classList.toggle('collapsed');
         });
     </script>    
+    <script>
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set a timeout to hide the alert after 3 seconds (3000 milliseconds)
+            setTimeout(function() {
+                var alertElement = document.getElementById("autoDismissAlert");
+                if (alertElement) {
+                    alertElement.style.display = "none";
+                }
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
