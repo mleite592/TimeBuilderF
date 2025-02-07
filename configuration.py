@@ -1,4 +1,5 @@
 
+from database.models.project_tasks import ProjectTasks
 from database.models.subtask import Subtask
 from database.models.task import Task
 from database.models.timesheet import Timesheet
@@ -8,6 +9,7 @@ from routes.timesheets import timesheets_route
 from routes.tasks import tasks_route
 from routes.subtasks import subtasks_route
 from routes.calendars import calendars_route
+from routes.project_tasks import project_tasks_route
 from database.database import db
 from database.models.project import Project
 from flask_wtf import CSRFProtect
@@ -36,6 +38,7 @@ def configure_routes(app):
     app.register_blueprint(tasks_route, url_prefix='/tasks')
     app.register_blueprint(subtasks_route, url_prefix='/subtasks')    
     app.register_blueprint(calendars_route, url_prefix='/calendars')
+    app.register_blueprint(project_tasks_route, url_prefix='/project_tasks')
     
 
 def configure_db():
@@ -45,6 +48,8 @@ def configure_db():
     db.create_tables([Project])
     db.create_tables([Task])
     db.create_tables([Subtask])
+    #db.drop_tables([ProjectTasks])
+    db.create_tables([ProjectTasks])
     #db.drop_tables([Timesheet])
     db.create_tables([Timesheet])
 

@@ -3,33 +3,81 @@
 
 {% block content %}
 <div class="container mt-3">
+    <div>
+        <button class="action-btn">
+            <a href="{{ url_for('calendars.index') }}">
+                <span class="material-icons">calendar_today</span>
+            </a>                            
+        </button>    
+    </div>
     <h2>Timesheet</h2>    
     Date: {{ timesheet_day_selected }}
     {{ year }}
     {{ month }}
     {{ day }}
 
-    <form id="timesheetForm" method="POST" action="{{ url_for('timesheets.save', id=form.id.data, year=year, month=month, day=day) }}">                
-        {{ form.hidden_tag() }}                
-        <div class="form-row align-items-end">
+    <form id="timesheetForm" method="POST" action="{{ url_for('timesheets.save', id=id, year=year, month=month, day=day) }}">
+        {{ form.id }}
+        {{ form.operator }}
+        <div class="form-row align-items-end">                        
             <div class="form-group col-md-5">
-                <label for="date">Date</label>                                
-                {{ form.id }}                
+                <label for="projectCode">Project Code</label>
+                <select id="projectCode" name="projectCode" class="form-control">
+                    {% for project in projects %}
+                        <option value="{{ project.projectName }}" {% if project.Name == projectName %}selected{% endif %}>
+                            {{ project.projectName }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="form-group col-md-3">
-                <label for="status">Status</label>                                                                
-                {{ form.status }}
+      
+            <div class="form-group col-md-5">
+                <label for="unit_name">Unit Name</label>
+                <input type="text" id="unit_name" name="unit_name" value="{{ unit_name }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="subtaskId">Subtask ID</label>
+                <input type="text" id="subtaskId" name="subtaskId" value="{{ subtaskId }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="subtaskName">Subtask Name</label>
+                <input type="text" id="subtaskName" name="subtaskName" value="{{ subtaskName }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="taskName">Task Name</label>
+                <input type="text" id="taskName" name="taskName" value="{{ taskName }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="type_feature">Type Feature</label>
+                <input type="text" id="type_feature" name="type_feature" value="{{ type_feature }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="type_task">Type Task</label>
+                <input type="text" id="type_task" name="type_task" value="{{ type_task }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="comments">Comments</label>
+                <input type="text" id="comments" name="comments" value="{{ comments }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="start_time">Start Time</label>
+                <input type="text" id="start_time" name="start_time" value="{{ start_time }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="end_time">End Time</label>
+                <input type="text" id="end_time" name="end_time" value="{{ end_time }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="total_time">Total Time</label>
+                <input type="text" id="total_time" name="total_time" value="{{ total_time }}" class="form-control">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="status">Status</label>
+                <input type="text" id="status" name="status" value="{{ status }}" class="form-control">
             </div>
             <div class="form-group col-md-3">
                 <button type="submit" class="submit-btn">
                     <span class="material-icons">add</span>
-                </button>
-            </div>            
-        </div>
-        <div class="form-row align-items-end mt-2">
-            <div class="form-group col-md-5">
-                <button type="" class="btn submit-btn">
-                    {{ form.status }} 
                 </button>
             </div>
         </div>
@@ -48,11 +96,24 @@
         </thead>
         <tbody id="timesheetTableBody">
             {% for timesheet in timesheets %}
-                <tr>
-                    <td>{{ timesheet.id }}</td>                    
-                    <td>{{ timesheet.timesheet_date }}</td>
-                    <td>project<td>                    
-                    <td>{{ timesheet.status }}</td>
+                <tr>                    
+                        <td>{{ timesheet.id }}</td>
+                        <td>{{ timesheet.timesheet_date }}</td>
+                        <td>{{ timesheet.operator }}</td>
+                        <td>{{ timesheet.projectId }}</td>
+                        <td>{{ timesheet.projectCode }}</td>
+                        <td>{{ timesheet.projectName }}</td>
+                        <td>{{ timesheet.unit_name }}</td>
+                        <td>{{ timesheet.subtaskId }}</td>
+                        <td>{{ timesheet.subtaskName }}</td>
+                        <td>{{ timesheet.taskName }}</td>
+                        <td>{{ timesheet.type_feature }}</td>
+                        <td>{{ timesheet.type_task }}</td>
+                        <td>{{ timesheet.comments }}</td>
+                        <td>{{ timesheet.start_time }}</td>
+                        <td>{{ timesheet.end_time }}</td>
+                        <td>{{ timesheet.total_time }}</td>
+                        <td>{{ timesheet.status }}</td>                    
                     <td>
                         <button class="action-btn">
                             <a href="{{ url_for('timesheets.index', id=timesheet.id, year=year, month=month, day=day) }}">
@@ -76,6 +137,13 @@
         var today = new Date().toISOString().split('T')[0];
         document.getElementById('date').value = today;
     });
+
+    $(document).ready(function() {
+            $('#projectCode').select2({
+                placeholder: "Select a project",
+                allowClear: true
+            });
+    });    
 </script>
 
 {% endblock %}

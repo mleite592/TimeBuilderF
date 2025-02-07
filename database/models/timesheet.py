@@ -7,7 +7,7 @@ class Timesheet(BaseModel):
     projectId = IntegerField(null=True)    
     unit_name = CharField(null=True)
     sub_unit_name = CharField(null=True)
-    sub_task = CharField(null=True)
+    sub_taskId = CharField(null=True)
     start_chainage = IntegerField(null=True)
     end_chainage = IntegerField(null=True)
     task_status = CharField(null=True)

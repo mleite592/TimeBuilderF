@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+from database.DTO.timesheetDTO import TimesheetDTO
 from database.models.timesheet import Timesheet
 from database.models.project import Project
 from database.models.subtask import Subtask
@@ -15,12 +16,16 @@ def index(id=None, year=None, month=None, day=None):
     
     print("Aqui:", id, year, month, day)
 
+    projects = Project.select().where(Project.status != "disabled")
+
     if year:
         timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'
         
-        timesheets = Timesheet.select().where(
-            (Timesheet.status != 'Deleted') &
-            (Timesheet.timesheet_date == timesheet_day_selected)           
+        timesheets = timesheetsDTO(
+            Timesheet.select().where(
+                (Timesheet.status != 'Deleted') &
+                (Timesheet.timesheet_date == timesheet_day_selected)           
+            )
         )        
         form = TimeSheetForm(timesheet_date = timesheet_day_selected)
     else:
@@ -31,7 +36,7 @@ def index(id=None, year=None, month=None, day=None):
     else:
         form = TimeSheetForm(timesheet_date = timesheet_day_selected)
 
-    return render_template('timesheet_form.html', timesheets=timesheets, form=form, year=year, month=month, day=day, timesheet_day_selected=convert_date_ymd_to_mdy(year, month, day))
+    return render_template('timesheet_form.html', timesheets=timesheets, projects=projects, form=form, year=year, month=month, day=day, timesheet_day_selected=convert_date_ymd_to_mdy(year, month, day))
 
 #@timesheets_route.route('/save', methods=['POST'])
 @timesheets_route.route('/save/<int:year>/<int:month>/<int:day>', methods=['POST'])
@@ -54,7 +59,7 @@ def save(year, month, day):
                                       operator="m.leite@fugro.com",                               
                                       status = "Open"
                                       )
-            print("new", new_timesheet.timesheet_date, new_timesheet.operator)             
+            print("new", new_timesheet.timesheet_date, new_timesheet.operator)                         
             try:                     
                 new_timesheet.save()                
                 flash('Timesheet created successfully', 'success')
@@ -100,3 +105,10 @@ def convert_date_ymd_to_date(year, month, day):
     # Assign the formatted date to form.timesheet_date
     return formatted_date
     
+def timesheetsDTO(timesheets):
+    timesheets_dto = [TimesheetDTO(timesheet) for timesheet in timesheets]
+    return timesheets_dto
+
+def timesheetDTO(timesheet):
+    timesheetDTO = TimesheetDTO(timesheet)
+    return timesheetDTO

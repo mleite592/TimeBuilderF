@@ -6,7 +6,8 @@ from datetime import datetime
 
 class TimeSheetForm(FlaskForm):
     operator = StringField('operator')    
-    timesheet_date = StringField('timesheet_date')
+    timesheet_date = StringField('timesheet_date')    
+    projectId = StringField('projectId')
     #projectCode = SelectField('projectCode', default='None')
     #projectName = SelectField('projectName', default='None')    
     unit_name = StringField('unitName')

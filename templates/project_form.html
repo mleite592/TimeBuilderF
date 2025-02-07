@@ -48,6 +48,11 @@
                     <td>{{ project.status }}</td>
                     <td>
                         <button class="action-btn">
+                            <a href="{{ url_for('project_tasks.index', id=project.id) }}">
+                                <span class="material-icons">list</span>
+                            </a>                            
+                        </button>
+                        <button class="action-btn">
                             <a href="{{ url_for('projects.edit', id=project.id) }}">
                                 <span class="material-icons">edit</span>
                             </a>                            
