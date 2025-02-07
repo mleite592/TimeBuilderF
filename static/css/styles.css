@@ -115,9 +115,12 @@ body {
 .field-form {
     background-color: var(--fugro-light-blue);
     color: var(--fugro-white); /* Optional: Change text color for better readability */
-    border: 1px solid var(--fugro-gray); /* Optional: Add a border */
+    /*border: 0px solid var(--fugro-gray); /* Optional: Add a border */
     padding: 5px; /* Optional: Add padding */
-    border-radius: 4px; /* Optional: Add border radius */
+    /*border-radius: 4px; /* Optional: Add border radius */
+}
+.field-form-labe{
+        color: var(--fugro-white);
 }
 
 .alert-toster {

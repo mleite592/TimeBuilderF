@@ -1,8 +1,10 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from database.DTO.timesheetDTO import TimesheetDTO
+from database.models.project_tasks import ProjectTasks
+from database.models.task import Task
 from database.models.timesheet import Timesheet
 from database.models.project import Project
-from database.models.subtask import Subtask
+from database.models.subtask import SubTask
 from forms.timesheet import TimeSheetForm
 from peewee import fn
 from datetime import datetime
@@ -16,10 +18,11 @@ def index(id=None, year=None, month=None, day=None):
     
     print("Aqui:", id, year, month, day)
 
-    projects = Project.select().where(Project.status != "disabled")
 
     if year:
         timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'
+        
+        timesheet_day_selected
         
         timesheets = timesheetsDTO(
             Timesheet.select().where(
@@ -27,14 +30,20 @@ def index(id=None, year=None, month=None, day=None):
                 (Timesheet.timesheet_date == timesheet_day_selected)           
             )
         )        
-        form = TimeSheetForm(timesheet_date = timesheet_day_selected)
+        form = TimeSheetForm(timesheet_day = timesheet_day_selected)        
     else:
         flash('Timesheet date not informed')
 
     if id:
         form = TimeSheetForm(obj=Timesheet.get_by_id(id))                
-    else:
-        form = TimeSheetForm(timesheet_date = timesheet_day_selected)
+        print("dddd")
+    #else:
+        #form = TimeSheetForm(timesheet_date = timesheet_day_selected)
+     #   print("ddddxxxx")
+    
+    projects = Project.select().where(Project.status != "disabled")
+    
+    form.projects.choices = [(p.id, p.projectName) for p in Project.select().where(Project.status != "disabled")]
 
     return render_template('timesheet_form.html', timesheets=timesheets, projects=projects, form=form, year=year, month=month, day=day, timesheet_day_selected=convert_date_ymd_to_mdy(year, month, day))
 
@@ -94,6 +103,44 @@ def delete(id):
     else:
         flash('Timesheet not found')
     return redirect(url_for('timesheets.index', year=year, month=month, day=day))
+
+@timesheets_route.route('/tasks/<int:projectId>/')
+def task(projectId):
+    print("A:", projectId)
+    tasksquery = ProjectTasks().select().where(ProjectTasks.projectId == projectId)
+
+    tasks = []
+
+    for t in tasksquery:
+        task = Task.get_by_id(t.id)
+        taskDTO = {}
+        taskDTO['id'] = task.id
+        taskDTO['task'] = task.task
+        tasks.append(taskDTO)
+
+    return jsonify({'tasks': tasks})
+
+@timesheets_route.route('/subtasks/<int:taskId>/')
+def subtask(taskId):
+    print("B:", taskId)
+    subtasksquery = SubTask().select().where(SubTask.task == taskId)
+
+    subtasks = []
+
+    for t in subtasksquery:
+        print(t.id)
+        subtask = SubTask.get_by_id(t.id)
+        
+        subtaskDTO = {}
+        subtaskDTO['id'] = subtask.id
+        subtaskDTO['subtask'] = subtask.subtask
+        print(subtaskDTO)
+        subtasks.append(subtaskDTO)
+
+    return jsonify({'tasks': subtasks})
+
+
+
 
 def convert_date_ymd_to_mdy(year, month, day):
     date_obj= datetime(year, month, day)

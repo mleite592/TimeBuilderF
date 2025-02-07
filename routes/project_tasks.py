@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from database.DTO.project_tasksDTO import ProjectTasksDTO
 from database.models.project import Project
 from database.models.project_tasks import ProjectTasks
-from database.models.subtask import Subtask
+from database.models.subtask import SubTask
 from database.models.task import Task
 from forms.project_task import ProjectTasksForm
 from forms.project import ProjectForm

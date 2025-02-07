@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from database.models.subtask import Subtask
+from database.models.subtask import SubTask
 from database.models.task import Task
 from database.DTO.subtaskDTO import SubtaskDTO
 
@@ -7,7 +7,7 @@ subtasks_route = Blueprint('subtasks', __name__)
 
 @subtasks_route.route('/')
 def getSubtasks():
-    subtasks = Subtask.select()
+    subtasks = SubTask.select()
     subtasks_return = []
 
     for s in subtasks:

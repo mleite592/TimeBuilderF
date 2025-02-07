@@ -1,6 +1,6 @@
 
 from database.models.project_tasks import ProjectTasks
-from database.models.subtask import Subtask
+from database.models.subtask import SubTask
 from database.models.task import Task
 from database.models.timesheet import Timesheet
 from routes.home import home_route
@@ -47,7 +47,7 @@ def configure_db():
     #db.drop_tables([Project])
     db.create_tables([Project])
     db.create_tables([Task])
-    db.create_tables([Subtask])
+    db.create_tables([SubTask])
     #db.drop_tables([ProjectTasks])
     db.create_tables([ProjectTasks])
     #db.drop_tables([Timesheet])

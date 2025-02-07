@@ -3,7 +3,7 @@ from database.database import BaseModel
 from database.models.task import Task
 
 
-class Subtask(BaseModel):
+class SubTask(BaseModel):
     task = IntegerField()
     subtask = CharField()
     status = CharField()
