@@ -50,7 +50,7 @@ def configure_db():
     db.create_tables([SubTask])
     #db.drop_tables([ProjectTasks])
     db.create_tables([ProjectTasks])
-    #db.drop_tables([Timesheet])
+    db.drop_tables([Timesheet])
     db.create_tables([Timesheet])
 
 def preLoadTask():

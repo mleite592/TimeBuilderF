@@ -25,7 +25,9 @@
                 <tr>
                     <th>Project</th>
                     <th>Task Name</th>
-                    <th>Subtask Name</th>                    
+                    <th>Subtask Name</th>        
+                    <th>Start</th>
+                    <th>End</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +35,9 @@
                     <td> {{ form.projects }} </td>
                     <td> {{ form.tasks }} </td>
                     <td> {{ form.sub_tasks }} </td>
+                    <td> {{ form.start_time }} </td>
+                    <td> {{ form.end_time }} </td>
+                    
                 </tr>
                 <tr>
                     <td colspan="12">
@@ -52,6 +57,11 @@
                 <th scope="col">Id</th>
                 <th scope="col">Date</th>
                 <th scope="col">Project Name</th>
+                <th scope="col">Project Code</th>
+                <th scope="col">Task</th>
+                <th scope="col">Sub-task</th>
+                <th scope="col">Unit Name</th>
+                <th scope="col">Task Type</th>
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -60,15 +70,12 @@
             {% for timesheet in timesheets %}
                 <tr>                    
                     <td>{{ timesheet.id }}</td>
-                    <td>{{ timesheet.timesheet_date }}</td>
-                    <td>{{ timesheet.operator }}</td>
-                    <td>{{ timesheet.projectId }}</td>
-                    <td>{{ timesheet.projectCode }}</td>
+                    <td>{{ timesheet.timesheet_date }}</td>                                                                                                  
                     <td>{{ timesheet.projectName }}</td>
-                    <td>{{ timesheet.unit_name }}</td>
-                    <td>{{ timesheet.subtaskId }}</td>
-                    <td>{{ timesheet.subtaskName }}</td>
+                    <td>{{ timesheet.projectCode }}</td>                    
                     <td>{{ timesheet.taskName }}</td>
+                    <td>{{ timesheet.subtaskName }}</td>
+                    <td>{{ timesheet.unit_name }}</td>                                                            
                     <td>{{ timesheet.type_feature }}</td>
                     <td>{{ timesheet.type_task }}</td>
                     <td>{{ timesheet.comments }}</td>

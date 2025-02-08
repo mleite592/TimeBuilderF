@@ -1,6 +1,6 @@
 from typing import Optional
 from flask_wtf import FlaskForm
-from wtforms import DateField, HiddenField, SelectField, StringField, BooleanField, SubmitField, IntegerField
+from wtforms import DateField, HiddenField, SelectField, StringField, BooleanField, SubmitField, IntegerField, TimeField
 from wtforms.validators import DataRequired
 from datetime import datetime
 
@@ -19,8 +19,8 @@ class TimeSheetForm(FlaskForm):
     #type_feature = SelectField('type_feature', default='Tradiotional') #Traditional or Roames
     #type_task =  SelectField('type_task', default='Regular')   #Regular, Rework or QC
     comments = StringField('comments')    
-    start_time = StringField('start_time')
-    end_time = StringField('end_time')
+    start_time = TimeField('start_time')
+    end_time = TimeField('end_time')
     status = StringField('Status', default='Open')
     id = HiddenField('ID')
 

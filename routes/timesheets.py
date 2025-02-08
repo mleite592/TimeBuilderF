@@ -17,12 +17,8 @@ timesheets_route = Blueprint('timesheets', __name__)
 def index(id=None, year=None, month=None, day=None):         
     
     print("Aqui:", id, year, month, day)
-
-
     if year:
-        timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'
-        
-        timesheet_day_selected
+        timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'        
         
         timesheets = timesheetsDTO(
             Timesheet.select().where(
@@ -65,10 +61,14 @@ def save(year, month, day):
                 flash('Timesheet not found', 'error')
         else:                      
             new_timesheet = Timesheet(timesheet_date=form.timesheet_date,
-                                      operator="m.leite@fugro.com",                               
-                                      status = "Open"
+                                      operator="m.leite@fugro.com",                             
+                                      status = "Open",
+                                      projectId = form.projects.data,
+                                      sub_taskId = form.sub_tasks.data,
+                                      start_time = form.start_time.data,
+                                      end_time = form.end_time.data
                                       )
-            print("new", new_timesheet.timesheet_date, new_timesheet.operator)                         
+            print("new", new_timesheet.timesheet_date, new_timesheet.operator, form.projects.data)                         
             try:                     
                 new_timesheet.save()                
                 flash('Timesheet created successfully', 'success')
@@ -138,9 +138,6 @@ def subtask(taskId):
         subtasks.append(subtaskDTO)
 
     return jsonify({'tasks': subtasks})
-
-
-
 
 def convert_date_ymd_to_mdy(year, month, day):
     date_obj= datetime(year, month, day)
