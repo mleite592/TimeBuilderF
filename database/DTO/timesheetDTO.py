@@ -24,7 +24,7 @@ class TimesheetDTO:
         self.comments = timesheet.comments
         self.start_time = timesheet.start_time
         self.end_time = timesheet.end_time
-        self.total_time = "total"
+        self.total_time = timesheet.calculate_time_difference()
         self.status = timesheet.status
 
     def __repr__(self):

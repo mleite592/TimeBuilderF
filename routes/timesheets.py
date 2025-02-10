@@ -21,11 +21,13 @@ def index(id=None, year=None, month=None, day=None):
         timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'        
         
         timesheets = timesheetsDTO(
-            Timesheet.select().where(
-                (Timesheet.status != 'Deleted') &
-                (Timesheet.timesheet_date == timesheet_day_selected)           
-            )
+            Timesheet.select()#.where(
+                #(Timesheet.status != 'Deleted') &
+                #(Timesheet.timesheet_date == timesheet_day_selected)           
+            #)
         )        
+
+        print("AquiXX:", timesheets)
         form = TimeSheetForm(timesheet_day = timesheet_day_selected)        
     else:
         flash('Timesheet date not informed')
@@ -38,42 +40,77 @@ def index(id=None, year=None, month=None, day=None):
      #   print("ddddxxxx")
     
     projects = Project.select().where(Project.status != "disabled")
+        
+    form.projects.choices = [("", "Select a project")] + [(p.id, p.projectName) for p in Project.select().where(Project.status != "disabled")]
     
-    form.projects.choices = [(p.id, p.projectName) for p in Project.select().where(Project.status != "disabled")]
+    #form.projects.choices = [(p.id, p.projectName) for p in Project.select().where(Project.status != "disabled")]
 
     return render_template('timesheet_form.html', timesheets=timesheets, projects=projects, form=form, year=year, month=month, day=day, timesheet_day_selected=convert_date_ymd_to_mdy(year, month, day))
 
 #@timesheets_route.route('/save', methods=['POST'])
 @timesheets_route.route('/save/<int:year>/<int:month>/<int:day>', methods=['POST'])
-def save(year, month, day):    
-    form = TimeSheetForm()                 
+def save(year, month, day):     
+    print("Aqui")
 
-    id = form.id.data
-    form.timesheet_date = convert_date_ymd_to_date(year, month, day)
-    
-    if form.validate_on_submit(): 
-        if id:
-            timesheet = Timesheet.get_by_id(id)
-            if timesheet:
-                #ToDO
-                timesheet.save()
+    form = TimeSheetForm()
+    if request.method == 'POST':
+        print("Aqui2")
+
+        if form.validate_on_submit():
+            print("Aqui3", form.projects.data)
+            id = form.id.data
+            if id:
+                timesheet = Timesheet.get_by_id(id)
+                if timesheet:
+                    # Update the timesheet with form data
+                    timesheet.operator = form.operator.data
+                    timesheet.timesheet_date = form.timesheet_date.data
+                    timesheet.projectId = form.projects.data
+                    #timesheet.tasks = form.tasks.data
+                    timesheet.sub_taskId = form.sub_tasks.data
+                    timesheet.unit_name = form.unit_name.data
+                    timesheet.sub_unit_name = form.sub_unit_name.data
+                    timesheet.start_chainage = form.start_chainage.data
+                    timesheet.end_chainage = form.end_chainage.data
+                    timesheet.task_status = form.task_status.data
+                    timesheet.type_feature = form.type_feature.data
+                    timesheet.type_task = form.type_task.data
+                    timesheet.comments = form.comments.data
+                    timesheet.start_time = form.start_time.data
+                    timesheet.end_time = form.end_time.data
+                    timesheet.status = form.status.data
+                    timesheet.save()                    
+                    flash('Timesheet updated successfully', 'success')
+                else:
+                    flash('Timesheet not found', 'error')
             else:
-                flash('Timesheet not found', 'error')
-        else:                      
-            new_timesheet = Timesheet(timesheet_date=form.timesheet_date,
-                                      operator="m.leite@fugro.com",                             
-                                      status = "Open",
-                                      projectId = form.projects.data,
-                                      sub_taskId = form.sub_tasks.data,
-                                      start_time = form.start_time.data,
-                                      end_time = form.end_time.data
-                                      )
-            print("new", new_timesheet.timesheet_date, new_timesheet.operator, form.projects.data)                         
-            try:                     
-                new_timesheet.save()                
+                print("Aqui:", form.sub_tasks.data)
+                # Create a new timesheet
+                new_timesheet = Timesheet(
+                    operator=form.operator.data,
+                    timesheet_date=form.timesheet_date.data,
+                    projectId = form.projects.data,                                        
+                    #tasks=form.tasks.data,
+                    sub_taskId=form.sub_tasks.data,
+                    unit_name=form.unit_name.data,
+                    sub_unit_name=form.sub_unit_name.data,
+                    start_chainage=form.start_chainage.data,
+                    end_chainage=form.end_chainage.data,
+                    task_status=form.task_status.data,
+                    type_feature=form.type_feature.data,
+                    type_task=form.type_task.data,
+                    comments=form.comments.data,
+                    start_time=form.start_time.data,
+                    end_time=form.end_time.data,
+                    status=form.status.data
+                )
+                new_timesheet.save()
+                #return {jsonify(new_timesheet)}
                 flash('Timesheet created successfully', 'success')
-            except Exception as e:
-                flash(f'Error creating timesheet: {e}', 'error')            
+        else:            
+            #flash(form.errors, "error")
+            return f'Missing field: {form.errors}'
+    
     return redirect(url_for('timesheets.index', year=year, month=month, day=day))
     
 @timesheets_route.route('/edit/<int:id>', methods=['POST'])

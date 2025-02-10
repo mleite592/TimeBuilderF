@@ -91,7 +91,7 @@ def preLoadSubTask():
     #        print("Task not found")
 
         ## QUERY
-    query = Subtask.select()
+    query = SubTask.select()
     for record in query:
         print(record.id, record.subtask, record.status)
 

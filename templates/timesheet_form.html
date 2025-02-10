@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 {% block title %}Timesheet{% endblock %}
 
+
 {% block content %}
 <div class="container mt-3">
     <div>
@@ -11,7 +12,7 @@
         </button>    
     </div>
     <h2>Timesheet</h2>    
-    Date: {{ timesheet_day_selected }}
+    Date: {{ timesheet_day_selected }}    
     {{ year }}
     {{ month }}
     {{ day }}
@@ -20,74 +21,68 @@
         {{ form.hidden_tag() }}     
         {{ form.id }}
         {{ form.operator }}
-        <table class="table table-bordered field-form">
+        {{ timesheet_date }}        
+
+        <table class="field-form">
             <thead>
                 <tr>
                     <th>Project</th>
-                    <th>Task Name</th>
-                    <th>Subtask Name</th>        
-                    <th>Start</th>
-                    <th>End</th>
+                    <th>Task</th>
+                    <th>Subtask</th>
+                    <th>Unit Name</th>
+                    <th>Subunit Name</th>
+                    <th>Chainage start</th>
+                    <th>Chainage end</th>
+                    <th>Time start</th>
+                    <th>Time end</th>
+                    <th>Feature</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Comments</th>
+                    <th></th> <!-- Added a new column for the button -->
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td> {{ form.projects }} </td>
-                    <td> {{ form.tasks }} </td>
-                    <td> {{ form.sub_tasks }} </td>
-                    <td> {{ form.start_time }} </td>
-                    <td> {{ form.end_time }} </td>
-                    
-                </tr>
-                <tr>
-                    <td colspan="12">
+                    <td>{{ form.projects (class="field-form-row field-form-row-min-width")}}</td>
+                    <td>{{ form.tasks (class="field-form-row field-form-row-min-width")}}</td>
+                    <td>{{ form.sub_tasks (class="field-form-row field-form-row-min-width")}}</td>
+                    <td>{{ form.unit_name (class="field-form-row")}}</td>
+                    <td>{{ form.sub_unit_name (class="field-form-row")}}</td>
+                    <td>{{ form.start_chainage (class="field-form-row")}}</td>
+                    <td>{{ form.end_chainage (class="field-form-row")}}</td>
+                    <td>{{ form.start_time (class="field-form-row")}}</td>
+                    <td>{{ form.end_time (class="field-form-row")}}</td>
+                    <td>{{ form.type_feature (class="field-form-row")}}</td>
+                    <td>{{ form.type_task (class="field-form-row")}}</td>
+                    <td>{{ form.task_status (class="field-form-row")}}</td>
+                    <td>{{ form.comments (class="field-form-row")}}</td>
+                    <td>
                         <button type="submit" class="submit-btn">
                             <span class="material-icons">add</span>
                         </button>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </form>
-    
-    <!-- Grid to display timesheets -->
-    <table class="table table-bordered-rows mt-3">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Date</th>
-                <th scope="col">Project Name</th>
-                <th scope="col">Project Code</th>
-                <th scope="col">Task</th>
-                <th scope="col">Sub-task</th>
-                <th scope="col">Unit Name</th>
-                <th scope="col">Task Type</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="timesheetTableBody">
-            {% for timesheet in timesheets %}
-                <tr>                    
-                    <td>{{ timesheet.id }}</td>
-                    <td>{{ timesheet.timesheet_date }}</td>                                                                                                  
-                    <td>{{ timesheet.projectName }}</td>
-                    <td>{{ timesheet.projectCode }}</td>                    
-                    <td>{{ timesheet.taskName }}</td>
-                    <td>{{ timesheet.subtaskName }}</td>
-                    <td>{{ timesheet.unit_name }}</td>                                                            
-                    <td>{{ timesheet.type_feature }}</td>
-                    <td>{{ timesheet.type_task }}</td>
-                    <td>{{ timesheet.comments }}</td>
+                {% for timesheet in timesheets %}
+                <tr>
+                    <td class="field-form-row-min-width">{{ timesheet.projectName }}</td>
+                    <td class="field-form-row-min-width">{{ timesheet.taskName }}</td>
+                    <td class="field-form-row field-form-row-min-width">{{ timesheet.subtaskName }}</td>
+                    <td class="field-form-row">{{ timesheet.unit_name }}</td>
+                    <td class="field-form-row">{{ timesheet.subunit }}</td>
+                    <td class="field-form-row">{{ timesheet.chainage_start }}</td>
+                    <td>{{ timesheet.chainage_end }}</td>
                     <td>{{ timesheet.start_time }}</td>
                     <td>{{ timesheet.end_time }}</td>
-                    <td>{{ timesheet.total_time }}</td>
-                    <td>{{ timesheet.status }}</td>                    
+                    <td>{{ timesheet.feature_start }}</td>
+                    <td>{{ timesheet.task_type }}</td>
+                    <td>{{ timesheet.status }}</td>
+                    <td>{{ timesheet.comments }}</td>
                     <td>
                         <button class="action-btn">
                             <a href="{{ url_for('timesheets.index', id=timesheet.id, year=year, month=month, day=day) }}">
                                 <span class="material-icons">edit</span>
-                            </a>                            
+                            </a>
                         </button>
                         <button class="action-btn">
                             <a href="{{ url_for('timesheets.delete', id=timesheet.id ) }}">
@@ -97,8 +92,9 @@
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </form>    
 </div>
 
 <script>
@@ -110,9 +106,8 @@
         project = project_select.value;
         
         fetch('/timesheets/tasks/' + project).then(function(response){
-            response.json().then(function(data){
-                /*alert(data);*/
-                let optionHTML = '';
+            response.json().then(function(data){                
+                let optionHTML = '<option value="noproject">Select a task</option>';
                 
                 for (let t of data.tasks) {
                     optionHTML += '<option value="' + t.id + '">' + t.task + '</option>'
@@ -127,7 +122,7 @@
             fetch('/timesheets/subtasks/' + task).then(function(response){
                 response.json().then(function(data){
                     console.log(data);
-                    let optionHTML = '';
+                    let optionHTML = '<option value="noproject">Select a subtask</option>';
                 
                     for (let s of data.tasks) {
                         optionHTML += '<option value="' + s.id + '">' + s.subtask + '</option>'
@@ -139,7 +134,7 @@
                 });
             });
         }
-    }
-</script>
+    }    
+    </script>
 
 {% endblock %}

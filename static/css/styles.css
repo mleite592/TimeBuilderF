@@ -8,7 +8,8 @@
 body {
     display: flex;
     height: 100vh;
-    overflow: hidden;
+    overflow: auto;
+    margin: 0;    
     background-color: var(--fugro-dark-blue);
     color: var(--fugro-white);
 }
@@ -17,11 +18,19 @@ body {
     width: 220px;
     background-color: var(--fugro-light-blue);
     padding: 10px;
+    position: fixed;
+    height: 100vh;
+    overflow: auto;
+    width: 220px;
     transition: width 0.3s;
 }
 
 .sidebar.collapsed {
     width: 70px;
+}
+
+.sidebar.collapsed + .main-content {
+    margin-left: 70px;
 }
 
 .sidebar .nav-link {
@@ -42,9 +51,10 @@ body {
     padding-left: 15px;
 }
 
-.content {
-    flex-grow: 1;
-    padding: 15px;
+.content {    
+    flex: 1;
+    margin-left: 220px;
+    transition: margin-left 0.3s;        
 }
 
 .topbar {
@@ -109,18 +119,44 @@ body {
 }
 
 .action-btn .material-icons {
-    font-size: 20px;
+    font-size: 2px;
+    vertical-align: middle;
 }
 
 .field-form {
-    background-color: var(--fugro-light-blue);
-    color: var(--fugro-white); /* Optional: Change text color for better readability */
-    /*border: 0px solid var(--fugro-gray); /* Optional: Add a border */
+    background-color: var(--fugro-dark-blue);
+    color: var(--fugro-d); /* Optional: Change text color for better readability */
     padding: 5px; /* Optional: Add padding */
-    /*border-radius: 4px; /* Optional: Add border radius */
+    border-radius: 4px; /* Optional: Add border radius */
+    border: none;
 }
 .field-form-labe{
         color: var(--fugro-white);
+}
+
+.field-form-row {    
+    padding: 5px;
+    padding-bottom: 5px;
+    color: var(--fugro-white);
+    background-color: var(--fugro-light-blue);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: var(--fugro-dark-blue);
+    max-width: 200px; /* Added max-width property */
+    overflow: hidden; /* Optional: to handle overflow text */
+    text-overflow: ellipsis; /* Optional: to show ellipsis for overflow text */
+    white-space: nowrap; /* Optional: to prevent text wrapping */
+}
+
+.field-form-row-min-width {
+    min-width: 200px; /* Set your desired minimum width */
+}
+
+.field-form-row:focus {    
+    background-color: var(--fugro-light-blue);
+    border: 1px;
+    box-shadow: 0 0 5px var(--fugro-white);
 }
 
 .alert-toster {
