@@ -30,12 +30,13 @@ def index(id):
 
 @project_tasks_route.route('/save', methods=['POST'])
 def save():    
-    form = ProjectTasksForm()              
-    id = form.id.data
-    if form.status == None:
-        form.status = "Enabled"
+    form = ProjectTasksForm()       
 
     if form.validate_on_submit():      
+        if form.status == None:
+            form.status.data = "Enabled"
+
+        print("AA", form.status.data)
         new_projectTask = ProjectTasks(projectId = form.projectId.data, status = form.status, taskId = form.tasks.data)
         new_projectTask.save()                            
         flash('Project Task created:', "success")

@@ -12,6 +12,7 @@ from routes.calendars import calendars_route
 from routes.project_tasks import project_tasks_route
 from database.database import db
 from database.models.project import Project
+from database.models.timesheet_status import TimesheetStatus
 from flask_wtf import CSRFProtect
 from flask_bootstrap import Bootstrap5
 import secrets
@@ -22,8 +23,7 @@ def configure_all(app):
     configure_routes(app)
     configure_db()
 
-def configure_app(app):
-    #app.config['SECRET_KEY'] = 'you-will-never-guess'    
+def configure_app(app):  
     foo = secrets.token_urlsafe(16)
     app.secret_key = foo
     app.config['SECRET_KEY'] = foo
@@ -50,8 +50,9 @@ def configure_db():
     db.create_tables([SubTask])
     #db.drop_tables([ProjectTasks])
     db.create_tables([ProjectTasks])
-    db.drop_tables([Timesheet])
+    #db.drop_tables([Timesheet])
     db.create_tables([Timesheet])
+    db.create_tables([TimesheetStatus])
 
 def preLoadTask():
     #projects = pd.read_excel("database/dataset.xlsx", sheet_name="Projects")

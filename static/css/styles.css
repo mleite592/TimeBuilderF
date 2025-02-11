@@ -164,6 +164,11 @@ body {
     top: 20px;
     right: 20px; 
     z-index: 1050;
+    width: 300px
+}
+
+.alert-toster + .alert-toster {
+    margin-top: 10px; /* Adjust the spacing between stacked alerts */
 }
 
 .calendar-table {

@@ -6,7 +6,7 @@ class ProjectTasksForm(FlaskForm):
     projectId = HiddenField('projectId')
     tasks = SelectField('tasks', choices=[], validate_choice=False)
     taskId = HiddenField('taskId')
-    status = StringField('status')    
+    status = HiddenField('status')    
     #id = IntegerField()
     id = HiddenField('ID')
 

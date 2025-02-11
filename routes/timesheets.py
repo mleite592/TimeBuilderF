@@ -6,6 +6,7 @@ from database.models.timesheet import Timesheet
 from database.models.project import Project
 from database.models.subtask import SubTask
 from forms.timesheet import TimeSheetForm
+from database.models.timesheet_status import TimesheetStatus
 from peewee import fn
 from datetime import datetime
 
@@ -16,25 +17,41 @@ timesheets_route = Blueprint('timesheets', __name__)
 @timesheets_route.route('/<int:year>/<int:month>/<int:day>')
 def index(id=None, year=None, month=None, day=None):         
     
-    print("Aqui:", id, year, month, day)
     if year:
         timesheet_day_selected = f'{year}-{month:02d}-{day:02d}'        
-        
+        form = TimeSheetForm()        
+        form.timesheet_date.data = timesheet_day_selected
+
+        #Fetch timesheet records        
         timesheets = timesheetsDTO(
-            Timesheet.select()#.where(
-                #(Timesheet.status != 'Deleted') &
-                #(Timesheet.timesheet_date == timesheet_day_selected)           
-            #)
+            Timesheet.select().where(
+                (Timesheet.status != 'Deleted') &
+                (Timesheet.timesheet_date == timesheet_day_selected)
+            )
         )        
 
-        print("AquiXX:", timesheets)
-        form = TimeSheetForm(timesheet_day = timesheet_day_selected)        
+        #Fetch timesheet status
+        timesheet_status = TimesheetStatus.select().where(
+                    (TimesheetStatus.operator == "m.leite@fugro.com") &
+                    (TimesheetStatus.timesheet_date == timesheet_day_selected)
+        ).first()
+
+        if timesheet_status:    
+            print(timesheet_status.status)
+            form.status.data = timesheet_status.status
+        else:
+            timesheet_status = TimesheetStatus(operator = "m.leite@fugro.com",
+                                               status = "Open",
+                                               timesheet_date = timesheet_day_selected
+                                    )
+            timesheet_status.save()
+            print("Create timesheetstatus")
+        form.status.data = timesheet_status.status
     else:
         flash('Timesheet date not informed')
 
     if id:
-        form = TimeSheetForm(obj=Timesheet.get_by_id(id))                
-        print("dddd")
+        form = TimeSheetForm(obj=Timesheet.get_by_id(id))                        
     #else:
         #form = TimeSheetForm(timesheet_date = timesheet_day_selected)
      #   print("ddddxxxx")
@@ -102,14 +119,17 @@ def save(year, month, day):
                     comments=form.comments.data,
                     start_time=form.start_time.data,
                     end_time=form.end_time.data,
-                    status=form.status.data
+                    status="Open"
                 )
                 new_timesheet.save()
                 #return {jsonify(new_timesheet)}
                 flash('Timesheet created successfully', 'success')
         else:            
-            #flash(form.errors, "error")
-            return f'Missing field: {form.errors}'
+           for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"Error in {getattr(form, field).label.text}: {error}", "error")
+                
+    
     
     return redirect(url_for('timesheets.index', year=year, month=month, day=day))
     
@@ -175,6 +195,43 @@ def subtask(taskId):
         subtasks.append(subtaskDTO)
 
     return jsonify({'tasks': subtasks})
+
+@timesheets_route.route('/submit/<int:year>/<int:month>/<int:day>')
+def submit(year, month, day):
+    form = TimeSheetForm()
+
+    timesheet_status = TimesheetStatus.select().where(TimesheetStatus.timesheet_date  == convert_date_ymd_to_date(year, month, day),
+                                                          TimesheetStatus.operator == "m.leite@fugro.com").first()
+    
+    if timesheet_status:                  
+        print("XX", timesheet_status.status) 
+        if timesheet_status.status == "Approved":
+            flash("Timesheet already approved! No changes are allowed.", "error")
+        else:
+            if timesheet_status.status == "Open":
+                new_status = "Submitted"
+            else:
+                new_status = "Open"
+                print("Reopening")            
+            
+            timesheet_status.status = new_status
+            timesheet_status.save()
+
+            #Update timesheet records        
+            query = Timesheet.update(status=new_status).where(
+                Timesheet.timesheet_date == convert_date_ymd_to_date(year, month, day),
+                Timesheet.status != 'Deleted'
+                )        
+            query.execute()
+            print("KKKK:", timesheet_status.status)
+    else:
+        flash("Timesheet status not found", "error")
+                                                          
+    form.status.data = new_status
+    print("KSKSK:", form.status.data)
+        
+    return redirect(url_for('timesheets.index', year=year, month=month, day=day))
+
 
 def convert_date_ymd_to_mdy(year, month, day):
     date_obj= datetime(year, month, day)

@@ -17,6 +17,7 @@
     </div>
     <form id="projecTasksForm" method="POST" action="{{ url_for('project_tasks.save', id=form.id.data, projectId=form.projectId.data) }}">                
         {{ form.hidden_tag() }}                                
+        {{ form.status }}
         <div class="form-row align-items-end">
             <div class="form-group col-md-8">
                 <label for="projectCode">Task</label>                                
@@ -46,7 +47,7 @@
             {% for p in project_tasks %}
                 <tr>                    
                     <td>{{ p.id }}</td>                    
-                    <td>{{ p.task}}</td>                                        
+                    <td>{{ p.task }}</td>                                        
                     <td>{{ p.status }}</td>
                     <td>
                         <button class="action-btn">

@@ -5,11 +5,11 @@ from wtforms.validators import DataRequired, Length
 from datetime import datetime, time
 
 class TimeSheetForm(FlaskForm):    
-    timesheet_date = StringField('timesheet_date')    
+    timesheet_date = HiddenField('timesheet_date')    
     projectId = HiddenField('projectId')
-    projects = SelectField('projects', choices=[], validate_choice=False)
-    tasks = SelectField('task', choices=[], validate_choice=False)
-    sub_tasks = SelectField('subtask', choices=[], validate_choice=False)    
+    projects = SelectField('projects', choices=[], validate_choice=True)
+    tasks = SelectField('task', choices=[], validate_choice=True)
+    sub_tasks = SelectField('subtask', choices=[], validate_choice=True)    
     unit_name = StringField('unitName', render_kw={"style": "width: 50px;"})
     sub_unit_name = StringField('subUnitName', render_kw={"style": "width: 50px;"})
     start_chainage = IntegerField('start_chainage', default=1, render_kw={"style": "width: 50px;"})
@@ -20,7 +20,7 @@ class TimeSheetForm(FlaskForm):
     comments = StringField('comments')    
     start_time = TimeField('start_time', default=time(14,0), format='%H:%M')
     end_time = TimeField('end_time', default=time(15,0), format='%H:%M')
-    status = StringField('Status', default='Open')
+    status = StringField('Status', default='Open', render_kw={'readonly': True})
     operator = HiddenField('Operator')
     id = HiddenField('ID')
 

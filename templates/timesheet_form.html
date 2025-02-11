@@ -5,22 +5,40 @@
 {% block content %}
 <div class="container mt-3">
     <div>
-        <button class="action-btn">
+        <button class="action-buttons submit-btn">
             <a href="{{ url_for('calendars.index') }}">
                 <span class="material-icons">calendar_today</span>
             </a>                            
         </button>    
-    </div>
-    <h2>Timesheet</h2>    
-    Date: {{ timesheet_day_selected }}    
-    {{ year }}
-    {{ month }}
-    {{ day }}
-
+    </div>       
+    <div class="timesheet-containet">
+        <h2>Timesheet</h2>    
+        <b>Date:</b> {{ timesheet_day_selected }} 
+        <b>Status:</b>{{ form.status (class="field-form-row")}}
+        {% if form.status.data == 'Submitted' %}
+            <button class="action-buttons submit-btn">
+                <a href="{{ url_for('timesheets.submit', year=year, month=month, day=day) }}">
+                    <span>Re-open</span>
+                </a>                            
+            </button>
+        {% elif form.status.data == 'Open' %}
+            <button class="action-buttons submit-btn">
+                <a href="{{ url_for('timesheets.submit', year=year, month=month, day=day) }}">
+                    <span>Submit</span>
+                </a>                            
+            </button>
+        {% elif form.status.data == 'Approved' %}
+            <button class="action-buttons submit-btn" disabled>
+                <span>Approved</span>
+            </button>
+        {% endif %}
+    </div>    
+    
     <form id="timesheetForm" method="POST" action="{{ url_for('timesheets.save', id=id, year=year, month=month, day=day) }}">
         {{ form.hidden_tag() }}     
         {{ form.id }}
         {{ form.operator }}
+        {{ form.timesheet_date }}
         {{ timesheet_date }}        
 
         <table class="field-form">
@@ -43,6 +61,7 @@
                 </tr>
             </thead>
             <tbody>
+                {% if form.status.data == 'Open'%}
                 <tr>
                     <td>{{ form.projects (class="field-form-row field-form-row-min-width")}}</td>
                     <td>{{ form.tasks (class="field-form-row field-form-row-min-width")}}</td>
@@ -57,12 +76,13 @@
                     <td>{{ form.type_task (class="field-form-row")}}</td>
                     <td>{{ form.task_status (class="field-form-row")}}</td>
                     <td>{{ form.comments (class="field-form-row")}}</td>
-                    <td>
-                        <button type="submit" class="submit-btn">
-                            <span class="material-icons">add</span>                            
-                        </button>
+                    <td>                        
+                            <button type="submit" class="submit-btn">
+                                <span class="material-icons">add</span>                            
+                            </button>                        
                     </td>
-                </tr>                
+                </tr>   
+                {% endif %}             
                 {% for timesheet in timesheets %}
                 <tr>
                     <td class="field-form-row-min-width">{{ timesheet.projectName }}</td>
@@ -76,8 +96,9 @@
                     <td>{{ timesheet.end_time }}</td>
                     <td>{{ timesheet.feature_start }}</td>
                     <td>{{ timesheet.task_type }}</td>
-                    <td>{{ timesheet.status }}</td>
+                    <td>{{ timesheet.task_status }}</td>
                     <td>{{ timesheet.comments }}</td>
+                    <td>{{ timesheet.timesheet_date }}</td>
                     <td class="action-buttons">
                         <button class="submit-btn">
                             <a href="{{ url_for('timesheets.index', id=timesheet.id, year=year, month=month, day=day) }}">

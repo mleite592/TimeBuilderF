@@ -86,32 +86,32 @@
                 {% for category, message in messages %}
                     {% if category == "success" %}
                     <div class="alert alert-success alert-toster mb-3" role="alert" id="autoDismissAlert">
-                        {{category}}:{{ message }}                        
+                        {{ category }}: {{ message }}                        
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                          </button>
-                    </div>                    
-                    {% endif %}                                                 
+                        </button>
+                    </div>
+                    {% endif %}
                     {% if category == "warning" %}
                     <div class="alert alert-warning alert-toster mb-3" role="alert" id="autoDismissAlert">
-                        {{category}}:{{ message }}                        
+                        {{ category }}: {{ message }}                        
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                          </button>
+                        </button>
                     </div>
+                    {% endif %}
                     {% if category == "error" %}
-                    <div class="alert alert-error alert-toster mb-3" role="alert">
-                        {{category}}:{{ message }}                        
+                    <div class="alert alert-danger alert-toster mb-3" role="alert" id="autoDismissAlert">
+                        {{ category }}: {{ message }}                        
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                          </button>
-                    </div>                    
-                    {% endif %}                                                                     
-                {% endif %}  
+                        </button>
+                    </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             {% endwith %}
-           {% block content %}           
+            {% block content %}
             <div class="topbar">
                 <h5>Time Builder</h5>
                 <p>A simple timesheet app</p>                
