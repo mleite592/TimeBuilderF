@@ -29,8 +29,8 @@
                     <th>Project</th>
                     <th>Task</th>
                     <th>Subtask</th>
-                    <th>Unit Name</th>
-                    <th>Subunit Name</th>
+                    <th>Unit</th>
+                    <th>Subunit</th>
                     <th>Chainage start</th>
                     <th>Chainage end</th>
                     <th>Time start</th>
@@ -39,7 +39,7 @@
                     <th>Type</th>
                     <th>Status</th>
                     <th>Comments</th>
-                    <th></th> <!-- Added a new column for the button -->
+                    <th></th> <!-- Added a new column for the button -->                    
                 </tr>
             </thead>
             <tbody>
@@ -59,18 +59,18 @@
                     <td>{{ form.comments (class="field-form-row")}}</td>
                     <td>
                         <button type="submit" class="submit-btn">
-                            <span class="material-icons">add</span>
+                            <span class="material-icons">add</span>                            
                         </button>
                     </td>
-                </tr>
+                </tr>                
                 {% for timesheet in timesheets %}
                 <tr>
                     <td class="field-form-row-min-width">{{ timesheet.projectName }}</td>
                     <td class="field-form-row-min-width">{{ timesheet.taskName }}</td>
-                    <td class="field-form-row field-form-row-min-width">{{ timesheet.subtaskName }}</td>
-                    <td class="field-form-row">{{ timesheet.unit_name }}</td>
-                    <td class="field-form-row">{{ timesheet.subunit }}</td>
-                    <td class="field-form-row">{{ timesheet.chainage_start }}</td>
+                    <td class="field-form-row-min-width">{{ timesheet.subtaskName }}</td>
+                    <td>{{ timesheet.unit_name }}</td>
+                    <td>{{ timesheet.subunit }}</td>
+                    <td>{{ timesheet.chainage_start }}</td>
                     <td>{{ timesheet.chainage_end }}</td>
                     <td>{{ timesheet.start_time }}</td>
                     <td>{{ timesheet.end_time }}</td>
@@ -78,13 +78,13 @@
                     <td>{{ timesheet.task_type }}</td>
                     <td>{{ timesheet.status }}</td>
                     <td>{{ timesheet.comments }}</td>
-                    <td>
-                        <button class="action-btn">
+                    <td class="action-buttons">
+                        <button class="submit-btn">
                             <a href="{{ url_for('timesheets.index', id=timesheet.id, year=year, month=month, day=day) }}">
                                 <span class="material-icons">edit</span>
                             </a>
                         </button>
-                        <button class="action-btn">
+                        <button class="submit-btn">
                             <a href="{{ url_for('timesheets.delete', id=timesheet.id ) }}">
                                 <span class="material-icons">delete</span>
                             </a>
