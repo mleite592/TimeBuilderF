@@ -32,7 +32,7 @@ def configure_all(app):
 def configure_app(app):  
     foo = secrets.token_urlsafe(16)
     app.secret_key = foo
-    app.config['SECRET_KEY'] = foo
+    app.config['SECRET_KEY'] = foo        
     bootstrap = Bootstrap5(app)
     csrf = CSRFProtect(app)
 
