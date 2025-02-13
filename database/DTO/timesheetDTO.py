@@ -1,12 +1,12 @@
 from database.models.project import Project
-from database.models.subtask import SubTask
+from database.models.subtask import Subtask
 from database.models.task import Task
 from  database.models.timesheet import Timesheet
 
 class TimesheetDTO:
     def __init__(self, timesheet):
         project = Project.get_by_id(timesheet.projectId)
-        subtask = SubTask.get_by_id(timesheet.sub_taskId)
+        subtask = Subtask.get_by_id(timesheet.sub_taskId)
         task = Task.get_by_id(subtask.task)
 
         self.id = timesheet.id

@@ -1,7 +1,8 @@
 
+from sqlalchemy import create_engine
 from database.models.project_tasks import ProjectTasks
-from database.models.subtask import SubTask
-from database.models.task import Task
+from database.models.subtask import SubTask2, Subtask
+from database.models.task import Task, Task2
 from database.models.timesheet import Timesheet
 from routes.home import home_route
 from routes.projects import projects_route
@@ -17,11 +18,16 @@ from flask_wtf import CSRFProtect
 from flask_bootstrap import Bootstrap5
 import secrets
 import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from database.database import BaseSQL
 
 def configure_all(app):
     configure_app(app)
     configure_routes(app)
     configure_db()
+    configure_db_SQL()
 
 def configure_app(app):  
     foo = secrets.token_urlsafe(16)
@@ -29,7 +35,6 @@ def configure_app(app):
     app.config['SECRET_KEY'] = foo
     bootstrap = Bootstrap5(app)
     csrf = CSRFProtect(app)
-
 
 def configure_routes(app):
     app.register_blueprint(home_route)
@@ -39,20 +44,45 @@ def configure_routes(app):
     app.register_blueprint(subtasks_route, url_prefix='/subtasks')    
     app.register_blueprint(calendars_route, url_prefix='/calendars')
     app.register_blueprint(project_tasks_route, url_prefix='/project_tasks')
-    
+
+def configure_db_SQL():    
+    # Create the books table
+    engine = BaseSQL.engine
+    BaseSQL.Base.metadata.create_all(engine)
 
 def configure_db():
     db.connect()
     #db.drop_tables([Subtask])
     #db.drop_tables([Project])
-    db.create_tables([Project])
-    db.create_tables([Task])
-    db.create_tables([SubTask])
+    #db.create_tables([Project])
+    #db.create_tables([Task])
+    db.create_tables([SubTask2])
     #db.drop_tables([ProjectTasks])
-    db.create_tables([ProjectTasks])
+    #db.create_tables([ProjectTasks])
     #db.drop_tables([Timesheet])
-    db.create_tables([Timesheet])
-    db.create_tables([TimesheetStatus])
+    #db.create_tables([Timesheet])
+    #db.create_tables([TimesheetStatus])
+    #migrateTask()
+    #migratesubTask()
+    #preLoadSubTask()
+
+def migrateTask():
+    tasks = Task.select()
+
+    for t in tasks:
+        t2 = Task2(task_name = t.task,
+                       status = t.status)
+        t2.add()
+
+def migratesubTask():
+    tasks = SubTask2.select()
+
+    for t in tasks:
+        t2 = Subtask(subtask_name = t.task,
+                      task_id = t.task,
+                       status = t.status)
+        t2.add()
+
 
 def preLoadTask():
     #projects = pd.read_excel("database/dataset.xlsx", sheet_name="Projects")
@@ -83,18 +113,27 @@ def preLoadSubTask():
     #print(tasks, sub_tasks)
 
     ###INSERT
-    #for index, row in subtasks.iterrows():
-    #    try:
-    #        task = Task.get(Task.task == row.Task)
-    #       # print(task.id, task.task, task.status, row.Subtask)
-    #        #Subtask.create(task = task.id, subtask = row.Subtask, status = "Enabled")
-    #    except Task.DoesNotExist:
-    #        print("Task not found")
+    for index, row in subtasks.iterrows():
+        print(row.Task, row.Subtask)
+        try:
+            task = Task.get_by_task_name(row.Task)
+            #print(task)
+            print(row.Subtask, task.id)
+            subtask = Subtask(
+                task_id = task.id,
+                subtask_name = row.Subtask,
+                status = "Enabled"
+            )
+            ###
+            ##subtask.add()
+            ###
+        except Task.DoesNotExist:
+            print("Task not found") 
 
         ## QUERY
-    query = SubTask.select()
-    for record in query:
-        print(record.id, record.subtask, record.status)
+    #query = Subtask.select()
+    #for record in query:
+    #    print(record.id, record.subtask, record.status)
 
     ## DELETE
     #query = Subtask.delete()

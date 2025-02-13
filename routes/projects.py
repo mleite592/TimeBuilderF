@@ -1,14 +1,14 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from database.models.project import Project
+from database.models.project import Project, Project2
 from forms.project import ProjectForm
 
 projects_route = Blueprint('projects', __name__)
 
 @projects_route.route('/')
 def index():
-    print("sssss") 
-    projects = Project.select()
-    form = ProjectForm(acton='add')
+    projects = Project.getAll()
+    print(projects)
+    form = ProjectForm()
     return render_template('project_form.html', projects=projects, form = form)
 
 @projects_route.route('/save', methods=['POST'])
@@ -22,7 +22,7 @@ def save():
                 project.projectCode = form.projectCode.data
                 project.projectName = form.projectName.data               
                 project.status = form.projectStatus.data                
-                project.save()
+                project.update()
             else:
                 flash('Project not found', "error")
         else:
@@ -30,26 +30,16 @@ def save():
                                   projectName=form.projectName.data,
                                   status = form.projectStatus.data)    
 
-            new_project.save()                    
+            new_project.add()                    
             flash('Project created', "success")
         return redirect(url_for('projects.index'))
     
 @projects_route.route('/edit/<int:id>')
 def edit(id):
-    projects = Project.select()    
+    projects = Project.getAll()   
     project = Project.get_by_id(id)
-    form = ProjectForm(obj=project)         
-    #print("edit", form, project, id)
+    form = ProjectForm(obj=project)             
     return render_template('project_form.html', projects=projects, form=form)
-
-
-#
-#@projects_route.route('/x')
-#def indexx():
-#    projects = Project.select()
-#    form = ProjectForm()    
-#    return render_template('project_form.html', projects=projects, form = form)
-
 
 @projects_route.route('/delete')
 def delete():

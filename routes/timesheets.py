@@ -4,7 +4,7 @@ from database.models.project_tasks import ProjectTasks
 from database.models.task import Task
 from database.models.timesheet import Timesheet
 from database.models.project import Project
-from database.models.subtask import SubTask
+from database.models.subtask import Subtask
 from forms.timesheet import TimeSheetForm
 from database.models.timesheet_status import TimesheetStatus
 from peewee import fn
@@ -180,7 +180,7 @@ def task(projectId):
 @timesheets_route.route('/subtasks/<int:taskId>/')
 def subtask(taskId):
     print("B:", taskId)
-    subtasksquery = SubTask().select().where(SubTask.task == taskId)
+    subtasksquery = Subtask().select().where(Subtask.task == taskId)
 
     subtasks = []
 
